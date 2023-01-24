@@ -25,7 +25,31 @@ const arancia = new Article({
     "Oggi è stata scoperta un arancia di dimensioni pazzesche, non riuscirete a credere ai vostri occhi quando a vedrete",
 });
 
-arancia.save();
+// arancia.save();
+
+app.get("/articles", function (req, res) {
+  Article.find({}, function (err, foundArticles) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(foundArticles);
+    }
+  });
+});
+
+app.post("/articles", function (req, res) {
+  const newArticle = new Article({
+    title: req.body.title,
+    content: req.body.content,
+  });
+  newArticle.save(function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Successfully add new article");
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
