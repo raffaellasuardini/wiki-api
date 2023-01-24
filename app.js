@@ -10,7 +10,7 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-mongoose.connect(process.env.MONGO);
+mongoose.connect(process.env.MONGO + "wikiDB");
 
 const articleSchema = new mongoose.Schema({
   title: String,
