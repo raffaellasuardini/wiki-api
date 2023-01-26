@@ -5,6 +5,8 @@ const mongoose = require("mongoose");
 const app = express();
 const port = 3000;
 
+mongoose.set("strictQuery", false);
+
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: true }));
