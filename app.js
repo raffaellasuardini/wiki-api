@@ -29,6 +29,7 @@ const arancia = new Article({
 
 // arancia.save();
 
+// requests targetting all articles
 app.get("/articles", function (req, res) {
   Article.find({}, function (err, foundArticles) {
     if (err) {
@@ -59,6 +60,69 @@ app.delete("/articles", function (req, res) {
       console.log(err);
     } else {
       res.send(`There are ${objectsDeleted.deletedCount} document deleted`);
+    }
+  });
+});
+
+// requests targetting a specific article
+app.get("/articles/:articleTitle", function (req, res) {
+  Article.findOne(
+    { title: req.params.articleTitle },
+    function (err, foundArticle) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (foundArticle) {
+          res.send(foundArticle);
+        } else {
+          res.sendStatus(404).send("Any article found");
+        }
+      }
+    }
+  );
+});
+
+app.put("/articles/:articleTitle", function (req, res) {
+  Article.replaceOne(
+    { title: req.params.articleTitle },
+    { title: req.body.title, content: req.body.content },
+    function (err, results) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send("Successfully update article");
+      }
+    }
+  );
+});
+
+app.patch("/articles/:articleTitle", function (req, res) {
+  const updatequery = {};
+  req.body.title
+    ? (updatequery.title = req.body.title)
+    : (updatequery.content = req.body.content);
+
+  Article.findOneAndUpdate(
+    { title: req.params.articleTitle },
+    updatequery,
+    function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(
+          `Successfully update ${updatequery.title ? "title" : "content"}`
+        );
+      }
+    }
+  );
+});
+
+app.delete("/articles/:articleTitle", function (req, res) {
+  Article.findOneAndDelete({ title: req.params.articleTitle }, function (err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send("Deleted article");
     }
   });
 });
